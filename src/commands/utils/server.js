@@ -100,6 +100,8 @@ module.exports = {
                 console.log(e)
                 await interaction.reply({ content: "An error occured while fetching server information!", ephemeral: true})
             }
+        } else {
+            await interaction.reply({ content: "Syntax Error! You did not provide a server!"})
         }
     }
 };
