@@ -75,7 +75,7 @@ module.exports = {
                     .setTimestamp()
                     .setDescription(`\`\`\`${server['motd'].replaceAll(COLOUR_CODE_EXPR, '')}\`\`\``)
                     .setTitle(`${server['name']} ${isVisible()}`)
-                    .setFooter({text: `Minehut Stats ${process.env.VERSION}`, iconURL: 'https://github.com/ArtifactingMC/mhstatsbot-assets/raw/main/logo.png'})
+                    .setFooter({text: `Minehut Utils ${process.env.VERSION}`, iconURL: 'https://github.com/ArtifactingMC/mhstatsbot-assets/raw/main/logo.png'})
                 try {
                     embed.setThumbnail(`https://minecraft-api.vercel.app/items/${server['icon'].toLowerCase()}.png`)
                 } catch (e) {
