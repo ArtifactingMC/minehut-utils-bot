@@ -52,9 +52,13 @@ module.exports = {
         const server_max = json['server_max']
         const server_count = json['server_count']
 
-        const javaBedrockRatio = Math.round(javaTotal / bedrockTotal)
-        const javaBedrockServerRatio = Math.round(javaPlayerServer / bedrockPlayerServer)
-        const javaBedrockLobbyRatio = Math.round(javaLobby / bedrockLobby)
+
+        // 
+        // Thanks to chrishours#0001 on Discord for help with the ratio calculations
+        // 
+        const javaBedrockRatio = Math.round(javaTotal / totalPlayers * 100)
+        const javaBedrockServerRatio = Math.round(javaPlayerServer / totalServerPlayers * 100)
+        const javaBedrockLobbyRatio = Math.round(javaLobby / totalLobbyPlayers * 100)
 
 
         const simpleEmbed = new MessageEmbed()
