@@ -5,9 +5,9 @@ module.exports = {
     name: 'ready',
     once: true,
     async execute(client) {
-        console.log(`${client.user} logged in!`);
+        console.log(`${client.user.username} logged in!`);
 
-        client.user.setActivity(`Minehut's API`, ({type: "WATCHING"}))
+        client.user.setActivity(`Minehut API`, ({type: "WATCHING"}))
 
     }
 }

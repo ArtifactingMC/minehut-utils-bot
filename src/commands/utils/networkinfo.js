@@ -90,17 +90,9 @@ module.exports = {
             .setTimestamp()
 
         if (advanced) {
-            if (hidden) {
-                await interaction.reply({ embeds: [advancedEmbed], ephemeral: true });
-            } else {
-                await interaction.reply({ embeds: [advancedEmbed], ephemeral: false });
-            }
+            await interaction.reply({ embeds: [advancedEmbed], ephemeral: hidden });
         } else {
-            if (hidden) {
-                await interaction.reply({ embeds: [simpleEmbed], ephemeral: true });
-            } else {
-                await interaction.reply({ embeds: [simpleEmbed], ephemeral: false });
-            }
+            await interaction.reply({ embeds: [simpleEmbed], ephemeral: hidden });
         }
     }
 };
