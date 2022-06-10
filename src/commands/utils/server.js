@@ -28,10 +28,14 @@ module.exports = {
                 const server = json['server']
 
                 function isOnline() {
-                    let isOnline = server['online']
-                    if (isOnline) {
-                        return "GREEN"
-                    } else {
+                    try {
+                        let isOnline = server['online']
+                        if (isOnline) {
+                            return "GREEN"
+                        } else {
+                            return "RED"
+                        }
+                    } catch (e) {
                         return "RED"
                     }
                 }
@@ -84,8 +88,12 @@ module.exports = {
 
 
                 embed.addField('Last Started', prettyDate(), true);
-                if (server['online']) {
-                    embed.addField('Player Count', `${server['playerCount']} / ${getMaxPlayers()}`, true)
+                try {
+                    if (server['online']) {
+                        embed.addField('Player Count', `${server['playerCount']} / ${getMaxPlayers()}`, true)
+                    }
+                } catch (e) {
+                    await interaction.reply({content: "The server you specified does not exist!", ephemeral: true})
                 }
                 embed.addField('Suspended', `${isSuspended()}`, true);
                 embed.addField('Credits/day', Math.round(server['credits_per_day']).toString(), true);
@@ -98,7 +106,13 @@ module.exports = {
                 await interaction.reply({embeds: [embed], ephemeral: false})
             } catch (e) {
                 console.log(e)
-                await interaction.reply({ content: "An error occured while fetching server information!", ephemeral: true})
+                let embed = new Discord.MessageEmbed()
+                    .setColor("RED")
+                    .setTitle("Invalid Server")
+                    .setDescription(`The server you requested does not exist!`)
+                    .setTimestamp()
+                    .setFooter({text: `Minehut Utils ${process.env.VERSION}`, iconURL: 'https://github.com/ArtifactingMC/mhstatsbot-assets/raw/main/logo.png'})
+                await interaction.reply({ embeds: [embed], ephemeral: true})
             }
         } else {
             await interaction.reply({ content: "Syntax Error! You did not provide a server!"})
