@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const Discord = require('discord.js');
 const { MessageEmbed } = require('discord.js');
 const fetch = require('node-fetch')
+const QuickChart = require('quickchart-js')
 require("dotenv").config();
 
 module.exports = {
@@ -61,37 +62,85 @@ module.exports = {
         const javaBedrockLobbyRatio = Math.round(javaLobby / totalLobbyPlayers * 100)
 
 
-        const simpleEmbed = new MessageEmbed()
-            .setColor('GREEN')
-            .setTitle(`Minehut Statistics`)
-            .setThumbnail('https://github.com/ArtifactingMC/mhstatsbot-assets/raw/main/mhlogo.png')
-            .addField('Total Players', `${totalPlayers}`, true)
-            .addField('Total Servers', `${server_count}`, true)
-            .setFooter({ text: `Minehut Utils ${process.env.VERSION}`, iconURL: 'https://github.com/ArtifactingMC/mhstatsbot-assets/raw/main/logo.png'})
-            .setTimestamp()
 
-        const advancedEmbed = new MessageEmbed()
-            .setColor('GREEN')
-            .setTitle(`Minehut Statistics (Advanced)`)
-            .setThumbnail('https://github.com/ArtifactingMC/mhstatsbot-assets/raw/main/mhlogo.png')
-            .addField('Total Players', `${totalPlayers}`, true)
-            .addField('Total Servers', `${server_count}`, true)
-            .addField('Java Players', `${javaTotal}`, true)
-            .addField('Bedrock Players', `${bedrockTotal}`, true)
-            .addField('Java -> Bedrock ratio', `${javaBedrockRatio}%`, true)
-            .addField('Java Server Players', `${javaPlayerServer}`, true)
-            .addField('Bedrock Server Players', `${bedrockPlayerServer}`, true)
-            .addField('Java -> Bedrock Server Ratio', `${javaBedrockServerRatio}%`, true)
-            .addField('Java Lobby Players', `${javaLobby}`, true)
-            .addField('Bedrock Lobby Players', `${bedrockLobby}`, true)
-            .addField('Java -> Bedrock Lobby Ratio', `${javaBedrockLobbyRatio}%`, true)
-            .addField('Max Server Count', `${server_max}`, true)
-            .setFooter({ text: `Minehut Utils ${process.env.VERSION}`, iconURL: 'https://github.com/ArtifactingMC/mhstatsbot-assets/raw/main/logo.png'})
-            .setTimestamp()
+
+        function graphData() {
+
+            const chart = new QuickChart();
+            chart.setConfig({
+                type: 'bar',
+                data: {
+                    labels: ['Total', 'Servers', 'Lobbies'],
+                    datasets: [
+                        {
+                            label: 'Java',
+                            backgroundColor: "rgb(255, 99, 132)",
+                            borderColor: "rgb(255, 99, 132)",
+                            data: [
+                                javaTotal,
+                                javaPlayerServer,
+                                javaLobby
+                            ],
+                        },
+                        {
+                            label: 'Bedrock',
+                            backgroundColor: "rgb(54, 162, 235)",
+                            borderColor: "rgb(54, 162, 235)",
+                            data: [
+                                bedrockTotal,
+                                bedrockPlayerServer,
+                                bedrockLobby
+                            ]
+                        }
+                    ]
+                },
+                options: {
+                    "stacked": false,
+                    "title": {
+                        "display": true,
+                        "text": "Minehut Network Player Statistics"
+                    },
+                }
+            });
+
+
+            return chart.getUrl()
+        }
+
+
+
 
         if (advanced) {
+            let advancedEmbed = new MessageEmbed()
+                .setColor('GREEN')
+                .setTitle(`Minehut Statistics (Advanced)`)
+                .setThumbnail('https://github.com/ArtifactingMC/mhstatsbot-assets/raw/main/mhlogo.png')
+                .addField('Total Players', `${totalPlayers}`, true)
+                .addField('Total Servers', `${server_count}`, true)
+                .addField('Java Players', `${javaTotal}`, true)
+                .addField('Bedrock Players', `${bedrockTotal}`, true)
+                .addField('Java -> Bedrock ratio', `${javaBedrockRatio}%`, true)
+                .addField('Java Server Players', `${javaPlayerServer}`, true)
+                .addField('Bedrock Server Players', `${bedrockPlayerServer}`, true)
+                .addField('Java -> Bedrock Server Ratio', `${javaBedrockServerRatio}%`, true)
+                .addField('Java Lobby Players', `${javaLobby}`, true)
+                .addField('Bedrock Lobby Players', `${bedrockLobby}`, true)
+                .addField('Java -> Bedrock Lobby Ratio', `${javaBedrockLobbyRatio}%`, true)
+                .addField('Max Server Count', `${server_max}`, true)
+                .setFooter({ text: `Minehut Utils ${process.env.VERSION}`, iconURL: 'https://github.com/ArtifactingMC/mhstatsbot-assets/raw/main/logo.png'})
+                .setTimestamp()
+                .setImage(graphData())
+
             await interaction.reply({ embeds: [advancedEmbed], ephemeral: hidden });
         } else {
+            let simpleEmbed = new MessageEmbed()
+                .setColor('GREEN')
+                .setTitle(`Minehut Statistics`)
+                .setThumbnail('https://github.com/ArtifactingMC/mhstatsbot-assets/raw/main/mhlogo.png')
+                .addField('Total Players', `${totalPlayers}`, true)
+                .addField('Total Servers', `${server_count}`, true)
+                .setFooter({ text: `Minehut Utils ${process.env.VERSION}`, iconURL: 'https://github.com/ArtifactingMC/mhstatsbot-assets/raw/main/logo.png'})
+                .setTimestamp()
             await interaction.reply({ embeds: [simpleEmbed], ephemeral: hidden });
         }
     }
